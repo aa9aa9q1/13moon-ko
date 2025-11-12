@@ -1,0 +1,16 @@
+{
+  "name": "토트의 달력 – 13 Moon Calendar (White Wizard)",
+  "short_name": "토트의 달력",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0b0b0c",
+  "theme_color": "#e9e9ea",
+  "icons": [
+    {
+      "src": "dreamspell_icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
