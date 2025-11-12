@@ -31,6 +31,7 @@ button.primary{background:#1b2a33;border-color:#24414f}
 .big{font-size:28px;font-weight:800;letter-spacing:0.2px}
 .kinfo{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .kbadge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:9px;background:#101318;border:1px solid #28303a;cursor:pointer}
+.kbadge img{width:18px;height:18px;object-fit:contain}
 .pill{display:inline-block;padding:4px 8px;border:1px solid #2c323a;border-radius:999px;background:#0f1216;font-size:12px;color:var(--muted)}
 .pop{position:fixed;max-width:320px;background:#101318;border:1px solid #2a2f36;border-radius:10px;padding:10px 12px;box-shadow:0 6px 30px rgba(0,0,0,.35);z-index:9999;font-size:14px;line-height:1.45;backdrop-filter: blur(6px)}
 .pop .ttl{font-weight:800;margin-bottom:6px}
@@ -55,6 +56,8 @@ button.primary{background:#1b2a33;border-color:#24414f}
 .tut-card h4{margin:0 0 6px}
 .tut-actions{display:flex;gap:8px;margin-top:8px;justify-content:flex-end}
 .seal-img{width:24px;height:24px;object-fit:contain;vertical-align:middle}
+.large-img{width:56px;height:56px;object-fit:contain;vertical-align:middle}
+.faded{opacity:.6}
 </style>
 </head>
 <body>
@@ -202,25 +205,23 @@ button.primary{background:#1b2a33;border-color:#24414f}
 
 <script>
 (function(){
+  const ASSET_BASE = "./src/assets";
+  const sealImg = (seal) => `${ASSET_BASE}/seals/${String(seal).padStart(2,'0')}.svg`;
+  const toneImg = (tone) => `${ASSET_BASE}/tones/${String(tone).padStart(2,'0')}.svg`;
+  const moonImg = (m)    => `${ASSET_BASE}/moons/${String(m).padStart(2,'0')}.svg`;
   const MOON_NAMES = ["1 자각의 달","2 도전의 달","3 서비스의 달","4 자기(형태)의 달","5 힘의 달","6 균형의 달","7 공명의 달","8 무결성의 달","9 의도의 달","10 현현의 달","11 해방의 달","12 협력의 달","13 우주의 달"];
   const TONE_NAMES = ["1 자기","2 달","3 전기","4 자기(형태)","5 발산","6 리듬","7 공명","8 은하","9 태양","10 행성","11 스펙트럴(해방)","12 수정(협력)","13 우주"];
   const SEAL_NAMES = ["1 붉은 용","2 흰 바람","3 파란 밤","4 노란 씨앗","5 붉은 뱀","6 흰 세계연결자","7 파란 손","8 노란 별","9 붉은 달","10 흰 개","11 파란 원숭이","12 노란 인간","13 붉은 하늘여행자","14 흰 마법사","15 파란 독수리","16 노란 전사","17 붉은 지구","18 흰 거울","19 파란 폭풍","20 노란 태양"];
   const TONE_BRIEF = ["목적·의지·현존","도전·극성·균형","봉사·활성·의도","형태·정의·형상화","힘·복제·방사","흐름·균형·조율","공명·채널링·조율","모델·무결성·조화","실현·의도·빛","현현·완성·생산","해방·용해·해체","협력·조합·헌신","우주·존재·초월"];
   const SEAL_BRIEF = ["탄생·양육·기초","소통·호흡·영감","꿈·풍요·잠재의식","씨앗·발아·잠재력","생명력·본능·정화","놓아보냄·죽음·기회","치유·완성·지식","아름다움·예술·조화","정화·흐름·물","사랑·충성·마음","유희·마법·재치","자유의지·지혜·영향","탐험·공간·각성","주술·시간·수용","비전·창공·마음의 눈","질문·지성·대담","동기화·항법·지구","반영·질서·경계","변형·촉매·에너지","계몽·생명·보편적 불"];
-
   const DEFAULT_BASE = { baseDate: "2025-07-26", baseKin: 34 };
-
   const toUTC=(y,m,d)=>new Date(Date.UTC(y,m-1,d));
   const ymd=(d)=>({y:d.getUTCFullYear(),m:d.getUTCMonth()+1,d:d.getUTCDate()});
   const parseYMD=(s)=>{const [y,m,d]=s.split("-").map(Number);return toUTC(y,m,d)};
-  const fmt2=(n)=>String(n).padStart(2,"0");
-  const fmtYMD=(d)=>{const o=ymd(d);return [o.y,fmt2(o.m),fmt2(o.d)].join("-")};
   const sameUTC=(a,b)=>a.getUTCFullYear()===b.getUTCFullYear()&&a.getUTCMonth()===b.getUTCMonth()&&a.getUTCDate()===b.getUTCDate();
   const diffDaysUTC=(a,b)=>Math.floor((a-b)/86400000);
-
   const getBase=()=>{try{const j=JSON.parse(localStorage.getItem("kin-base")||"{}");return (j.baseDate&&j.baseKin)?j:DEFAULT_BASE}catch(e){return DEFAULT_BASE}};
   const saveBase=(b)=>localStorage.setItem("kin-base", JSON.stringify(b));
-
   function toThirteenMoon(date){
     const {y}=ymd(date);
     const doot=toUTC(y,7,25);
@@ -230,7 +231,6 @@ button.primary{background:#1b2a33;border-color:#24414f}
     const offset=diffDaysUTC(date,start);
     return {isDOOT:false, month:Math.floor(offset/28)+1, day:(offset%28)+1, start};
   }
-
   function kinOf(date, base){
     const baseDate=parseYMD(base.baseDate);
     const days=diffDaysUTC(date, baseDate);
@@ -241,54 +241,14 @@ button.primary{background:#1b2a33;border-color:#24414f}
     const wavePos=((kin-1)%13)+1;
     return {kin,tone,seal,waveIndex,wavePos};
   }
+  const TONE_VOICE={1:"오늘은 새로운 씨앗을 심는 날. 가슴 깊이 품은 의도 하나를 우주에 선언해보세요",2:"빛과 그림자가 춤추는 날. 양극의 균형 속에서 당신만의 리듬을 찾아보세요",3:"당신의 에너지가 누군가에게 빛이 되는 날. 작은 봉사가 큰 울림을 만들어냅니다",4:"흩어진 조각들이 형태를 갖추는 날. 차근차근 기초를 다지면 튼튼한 성이 됩니다",5:"내면의 불꽃이 타오르는 날. 당신의 열정을 세상과 나누세요",6:"숨결처럼 자연스러운 리듬의 날. 들숨과 날숨 사이에서 균형을 찾아보세요",7:"마음의 현이 울리는 날. 직관의 목소리에 귀 기울여보세요",8:"말과 행동이 하나가 되는 날. 진정성이 당신의 가장 큰 힘입니다",9:"꿈이 현실로 피어나는 날. 한 걸음만 더 나아가면 별에 닿을 수 있어요",10:"열매가 맺히는 감사의 날. 그동안의 여정을 축하하며 결실을 거둬보세요",11:"낡은 껍질을 벗는 날. 놓아주면 새로운 공간이 열립니다",12:"함께하면 더 아름다운 날. 협력의 마법이 기적을 만들어냅니다",13:"모든 것이 하나로 연결되는 날. 큰 그림을 보며 조용히 미소 지어보세요"};
+  const SEAL_VOICE={1:"생명의 첫 숨결처럼, 새로운 시작을 품어보세요. 당신은 창조의 불꽃입니다",2:"바람처럼 자유롭게 소통하세요. 당신의 말에는 영혼을 깨우는 힘이 있습니다",3:"밤하늘의 별처럼 꿈을 품어보세요. 내면의 풍요가 현실로 흘러나옵니다",4:"작은 씨앗이 거대한 나무가 되듯, 가능성을 믿고 기다려보세요",5:"생명의 춤을 추세요. 몸의 지혜가 길을 알려줄 거예요",6:"다리가 되어 연결하세요. 놓아줌이 때로는 가장 큰 선물입니다",7:"치유의 손길로 세상을 어루만지세요. 당신의 따뜻함이 기적을 만듭니다",8:"아름다움의 눈으로 세상을 보세요. 조화로운 빛이 당신을 통해 빛납니다",9:"감정의 강물처럼 흘러가세요. 정화의 물결이 모든 것을 새롭게 합니다",10:"충실한 마음으로 사랑하세요. 진정한 우정이 삶을 풍요롭게 합니다",11:"놀이하는 마음으로 살아보세요. 웃음 속에 지혜가 숨어있습니다",12:"자유로운 영혼으로 선택하세요. 당신의 의지가 세상을 변화시킵니다",13:"미지의 세계로 모험을 떠나세요. 새로운 차원이 당신을 기다립니다",14:"시간의 마법사가 되어보세요. 지금 이 순간이 영원입니다",15:"독수리의 눈으로 멀리 보세요. 높은 시야가 진실을 보여줍니다",16:"용기 있는 질문으로 길을 여세요. 두려움 너머에 자유가 있습니다",17:"지구의 맥박과 함께 호흡하세요. 큰 리듬 속에서 춤추고 있습니다",18:"거울처럼 맑게 비춰보세요. 진실이 모든 것을 정화합니다",19:"변화의 폭풍을 타고 날아보세요. 혼돈 속에서 새로운 질서가 태어납니다",20:"태양처럼 빛나세요. 당신의 존재 자체가 축복입니다"};
 
-  // Narrative voice - 더 따뜻하고 공감적인 표현
-  const TONE_VOICE={
-    1:"오늘은 새로운 씨앗을 심는 날. 가슴 깊이 품은 의도 하나를 우주에 선언해보세요",
-    2:"빛과 그림자가 춤추는 날. 양극의 균형 속에서 당신만의 리듬을 찾아보세요",
-    3:"당신의 에너지가 누군가에게 빛이 되는 날. 작은 봉사가 큰 울림을 만들어냅니다",
-    4:"흩어진 조각들이 형태를 갖추는 날. 차근차근 기초를 다지면 튼튼한 성이 됩니다",
-    5:"내면의 불꽃이 타오르는 날. 당신의 열정을 세상과 나누세요",
-    6:"숨결처럼 자연스러운 리듬의 날. 들숨과 날숨 사이에서 균형을 찾아보세요",
-    7:"마음의 현이 울리는 날. 직관의 목소리에 귀 기울여보세요",
-    8:"말과 행동이 하나가 되는 날. 진정성이 당신의 가장 큰 힘입니다",
-    9:"꿈이 현실로 피어나는 날. 한 걸음만 더 나아가면 별에 닿을 수 있어요",
-    10:"열매가 맺히는 감사의 날. 그동안의 여정을 축하하며 결실을 거둬보세요",
-    11:"낡은 껍질을 벗는 날. 놓아주면 새로운 공간이 열립니다",
-    12:"함께하면 더 아름다운 날. 협력의 마법이 기적을 만들어냅니다",
-    13:"모든 것이 하나로 연결되는 날. 큰 그림을 보며 조용히 미소 지어보세요"
-  };
-
-  const SEAL_VOICE={
-    1:"생명의 첫 숨결처럼, 새로운 시작을 품어보세요. 당신은 창조의 불꽃입니다",
-    2:"바람처럼 자유롭게 소통하세요. 당신의 말에는 영혼을 깨우는 힘이 있습니다",
-    3:"밤하늘의 별처럼 꿈을 품어보세요. 내면의 풍요가 현실로 흘러나옵니다",
-    4:"작은 씨앗이 거대한 나무가 되듯, 가능성을 믿고 기다려보세요",
-    5:"생명의 춤을 추세요. 몸의 지혜가 길을 알려줄 거예요",
-    6:"다리가 되어 연결하세요. 놓아줌이 때로는 가장 큰 선물입니다",
-    7:"치유의 손길로 세상을 어루만지세요. 당신의 따뜻함이 기적을 만듭니다",
-    8:"아름다움의 눈으로 세상을 보세요. 조화로운 빛이 당신을 통해 빛납니다",
-    9:"감정의 강물처럼 흘러가세요. 정화의 물결이 모든 것을 새롭게 합니다",
-    10:"충실한 마음으로 사랑하세요. 진정한 우정이 삶을 풍요롭게 합니다",
-    11:"놀이하는 마음으로 살아보세요. 웃음 속에 지혜가 숨어있습니다",
-    12:"자유로운 영혼으로 선택하세요. 당신의 의지가 세상을 변화시킵니다",
-    13:"미지의 세계로 모험을 떠나세요. 새로운 차원이 당신을 기다립니다",
-    14:"시간의 마법사가 되어보세요. 지금 이 순간이 영원입니다",
-    15:"독수리의 눈으로 멀리 보세요. 높은 시야가 진실을 보여줍니다",
-    16:"용기 있는 질문으로 길을 여세요. 두려움 너머에 자유가 있습니다",
-    17:"지구의 맥박과 함께 호흡하세요. 큰 리듬 속에서 춤추고 있습니다",
-    18:"거울처럼 맑게 비춰보세요. 진실이 모든 것을 정화합니다",
-    19:"변화의 폭풍을 타고 날아보세요. 혼돈 속에서 새로운 질서가 태어납니다",
-    20:"태양처럼 빛나세요. 당신의 존재 자체가 축복입니다"
-  };
-
-  // Tooltip
   let popEl=null;
   function closePop(){ if(popEl){ popEl.remove(); popEl=null; } }
   function showPop(target,title,body,sub=""){
     closePop();
-    const el=document.createElement("div");
-    el.className="pop"; el.setAttribute("data-side","top");
+    const el=document.createElement("div"); el.className="pop"; el.setAttribute("data-side","top");
     el.innerHTML=`<div class="ttl">${title}</div><div>${body}</div>${sub?`<div class="sub">${sub}</div>`:""}`;
     document.body.appendChild(el);
     const r=target.getBoundingClientRect(), pad=8;
@@ -297,11 +257,9 @@ button.primary{background:#1b2a33;border-color:#24414f}
     const top=Math.max(8, r.top - ph - pad);
     el.style.left=left+'px'; el.style.top=top+'px';
     function onDoc(e){ if(!el.contains(e.target) && e.target!==target){ closePop(); document.removeEventListener('mousedown', onDoc, true);} }
-    document.addEventListener('mousedown', onDoc, true);
-    popEl=el;
+    document.addEventListener('mousedown', onDoc, true); popEl=el;
   }
 
-  // Calendar/UI
   const $datePick=document.getElementById("datePick");
   const $btnToday=document.getElementById("btnToday");
   const $btnShare=document.getElementById("btnShare");
@@ -315,9 +273,9 @@ button.primary{background:#1b2a33;border-color:#24414f}
   const $advice=document.getElementById("advice");
   const $btnFindDate=document.getElementById("btnFindDate");
   const $btnRefresh=document.getElementById("btnRefresh");
-
-  // 특정 날짜 검색 상태
-  let isSearchMode = false;
+  let isSearchMode=false;
+  const fmt2=(n)=>String(n).padStart(2,"0");
+  function imgTag(src, cls="seal-img", alt=""){ return `<img src="${src}" class="${cls}" alt="${alt}" onerror="this.style.display='none'">`; }
 
   function buildAdvice(tm,k){
     const one = `오늘은 <b>${TONE_NAMES[k.tone-1]}</b>의 빛으로 <b>${SEAL_NAMES[k.seal-1]}</b>를 살아내는 날입니다.`;
@@ -337,32 +295,39 @@ button.primary{background:#1b2a33;border-color:#24414f}
       const d=new Date(first.getTime()+i*86400000);
       const g=ymd(d);
       const tm=toThirteenMoon(d);
-      const isTarget = highlightDate ? sameUTC(d, highlightDate) : false;
-      const isToday = sameUTC(d, todayUTC);
-      html+=`<div class="cell ${isTarget?'is-today':''} ${isToday&&!isTarget?'is-actual-today':''}" title="Kin">${`<div class="gd">${g.d}</div><div class="md">${tm.month}.${tm.day}</div>`}</div>`;
+      const isTarget = highlightDate ? (d.toDateString()===highlightDate.toDateString()) : false;
+      const isToday = (d.toDateString()===todayUTC.toDateString());
+      html+=`<div class="cell ${isTarget?'is-today':''} ${isToday&&!isTarget?'is-actual-today':''}" title="Kin">
+        <div class="gd">${g.d}</div>
+        <div class="md">${tm.month}.${tm.day}</div>
+      </div>`;
     }
-    const from=[first.getUTCFullYear(),String(first.getUTCMonth()+1).padStart(2,'0'),String(first.getUTCDate()).padStart(2,'0')].join('-');
-    const to=[first.getUTCFullYear(),String(first.getUTCMonth()+1).padStart(2,'0'),String(first.getUTCDate()+27).padStart(2,'0')].join('-');
+    const from=[first.getUTCFullYear(),fmt2(first.getUTCMonth()+1),fmt2(first.getUTCDate())].join('-');
+    const to=[first.getUTCFullYear(),fmt2(first.getUTCMonth()+1),fmt2(first.getUTCDate()+27)].join('-');
     $moonMeta.textContent = `${MOON_NAMES[monthIndex-1]} — ${from} ~ ${to}`;
     $grid.innerHTML = html;
   }
 
   function render(date, opts={}){
     const base=getBase();
-    $datePick.value=[date.getUTCFullYear(),String(date.getUTCMonth()+1).padStart(2,'0'),String(date.getUTCDate()).padStart(2,'0')].join('-');
+    $datePick.value=[date.getUTCFullYear(),fmt2(date.getUTCMonth()+1),fmt2(date.getUTCDate())].join('-');
     const tm=toThirteenMoon(date);
     if(tm.isDOOT){ $todayCard.innerHTML='<div class="card">시간 밖의 날</div>'; $grid.innerHTML=""; return; }
     const k=kinOf(date, base);
     const g=ymd(date);
-    const toneBadge = `<span class="kbadge tip" data-kind="tone" data-id="${k.tone}">톤 ${TONE_NAMES[k.tone-1]}</span>`;
-    const sealBadge = `<span class="kbadge tip" data-kind="seal" data-id="${k.seal}">${SEAL_NAMES[k.seal-1]}</span>`;
     const waveNames=["붉은 용","흰 바람","파란 밤","노란 씨앗","붉은 뱀","흰 세계연결자","파란 손","노란 별","붉은 달","흰 개","파란 원숭이","노란 인간","붉은 하늘여행자","흰 마법사","파란 독수리","노란 전사","붉은 지구","흰 거울","파란 폭풍","노란 태양"];
+    const toneIcon = imgTag(toneImg(k.tone),"seal-img","tone");
+    const sealIcon = imgTag(sealImg(k.seal),"seal-img","seal");
+    const moonIcon = imgTag(moonImg(tm.month),"seal-img","moon");
+
+    const toneBadge = `<span class="kbadge tip" data-kind="tone" data-id="${k.tone}">${toneIcon} 톤 ${TONE_NAMES[k.tone-1]}</span>`;
+    const sealBadge = `<span class="kbadge tip" data-kind="seal" data-id="${k.seal}">${sealIcon} ${SEAL_NAMES[k.seal-1]}</span>`;
 
     $todayCard.innerHTML = `
-      <div class="big">${tm.month}.${tm.day} <span class="muted">(${MOON_NAMES[tm.month-1]})</span></div>
-      <div class="muted" style="margin-top:4px">그레고리력: ${g.y}-${String(g.m).padStart(2,'0')}-${String(g.d).padStart(2,'0')} · 13문: ${tm.month}.${tm.day}</div>
+      <div class="big">${moonIcon} ${tm.month}.${tm.day} <span class="muted">(${MOON_NAMES[tm.month-1]})</span></div>
+      <div class="muted" style="margin-top:4px">그레고리력: ${g.y}-${fmt2(g.m)}-${fmt2(g.d)} · 13문: ${tm.month}.${tm.day}</div>
       <div class="kinfo" style="margin-top:8px">
-        <span class="kbadge" id="kbKin">Kin ${k.kin}</span>
+        <span class="kbadge" id="kbKin">${sealIcon} Kin ${k.kin}</span>
         ${toneBadge}
         ${sealBadge}
         <span class="badge">${waveNames[k.waveIndex]} 웨이브스펠 · ${k.wavePos}/13</span>
@@ -373,12 +338,7 @@ button.primary{background:#1b2a33;border-color:#24414f}
     buildGrid(tm.start, tm.month, base, opts.highlightDate || date);
     bindTips(date);
     $advice.innerHTML = buildAdvice(tm, k);
-    
-    // 검색 모드 상태 업데이트
-    if(opts.highlightDate){
-      isSearchMode = true;
-      $btnRefresh.style.display = 'inline-block';
-    }
+    if(opts.highlightDate){ isSearchMode=true; $btnRefresh.style.display='inline-block'; }
   }
 
   function bindTips(date){
@@ -392,20 +352,18 @@ button.primary{background:#1b2a33;border-color:#24414f}
     document.querySelectorAll('.tip').forEach(el=>{
       el.onclick=()=>{
         const kind=el.getAttribute('data-kind'); const id=parseInt(el.getAttribute('data-id'),10);
-        if(kind==='tone'){ showPop(el, `톤 ${TONE_NAMES[id-1]}`, TONE_BRIEF[id-1]||""); }
-        if(kind==='seal'){ showPop(el, `${SEAL_NAMES[id-1]}`, SEAL_BRIEF[id-1]||""); }
+        if(kind==='tone'){ showPop(el, `톤 ${TONE_NAMES[id-1]}`, `<img src="${toneImg(id)}" class="large-img" alt=""><div style="margin-top:6px">${TONE_BRIEF[id-1]||""}</div>`); }
+        if(kind==='seal'){ showPop(el, `${SEAL_NAMES[id-1]}`, `<img src="${sealImg(id)}" class="large-img" alt=""><div style="margin-top:6px">${SEAL_BRIEF[id-1]||""}</div>`); }
       };
     });
   }
 
-  // Tabs - 순서 변경
   const $tabCal=document.getElementById("tabCal");
   const $tabGuide=document.getElementById("tabGuide");
   const $tabProfiles=document.getElementById("tabProfiles");
   const $pageCal=document.getElementById("page-calendar");
   const $pageGuide=document.getElementById("page-guide");
   const $pageProfiles=document.getElementById("page-profiles");
-  
   function setTab(which){
     const isCal = which==='cal', isGuide=which==='guide', isPro=which==='profiles';
     $pageCal.classList.toggle("active", isCal);
@@ -415,16 +373,13 @@ button.primary{background:#1b2a33;border-color:#24414f}
     $tabGuide.setAttribute("aria-selected", isGuide?"true":"false");
     $tabProfiles.setAttribute("aria-selected", isPro?"true":"false");
   }
-  
   $tabCal.onclick=()=>setTab('cal');
   $tabGuide.onclick=()=>setTab('guide');
   $tabProfiles.onclick=()=>setTab('profiles');
 
-  // Profiles store
   const LS_KEY="galacticProfiles";
   const getProfiles=()=>{ try{ return JSON.parse(localStorage.getItem(LS_KEY)||"[]"); }catch(e){ return [];} };
   const saveProfiles=(arr)=>localStorage.setItem(LS_KEY, JSON.stringify(arr));
-  
   function addProfile(name,birth,time){
     if(!birth) return;
     const base=getBase();
@@ -436,27 +391,22 @@ button.primary{background:#1b2a33;border-color:#24414f}
   }
   function deleteProfile(id){ const arr=getProfiles().filter(p=>p.id!==id); saveProfiles(arr); renderProfileList(); }
 
-  // 더 따뜻한 해석
   function interpretCard(p){
     const waveNames=["붉은 용","흰 바람","파란 밤","노란 씨앗","붉은 뱀","흰 세계연결자","파란 손","노란 별","붉은 달","흰 개","파란 원숭이","노란 인간","붉은 하늘여행자","흰 마법사","파란 독수리","노란 전사","붉은 지구","흰 거울","파란 폭풍","노란 태양"];
     const toneName=TONE_NAMES[p.tone-1], sealName=SEAL_NAMES[p.seal-1], waveName=waveNames[p.waveIndex];
-    
     const intro = `당신은 <b>${toneName}</b>의 빛으로 <b>${sealName}</b>의 지혜를 나누는 존재입니다.`;
     const body = `<p style="margin:8px 0">${TONE_VOICE[p.tone]}</p><p style="margin:8px 0">${SEAL_VOICE[p.seal]}</p>`;
-    
-    // 특별한 조합 메시지
-    let special = "";
-    if(p.tone===13 && p.seal===16){
-      special = `<p style="margin:8px 0;font-style:italic">✨ 우주 노란 전사는 가장 높은 차원의 영적 전사입니다. 두려움을 초월한 질문으로 진실의 문을 열고, 지혜와 용기로 다른 이들을 이끕니다.</p>`;
-    } else if(p.tone===12 && p.seal===3){
-      special = `<p style="margin:8px 0;font-style:italic">🌙 수정 파란 밤은 꿈의 협력자입니다. 집단 무의식의 보물을 현실로 끌어내어 모두와 나눕니다.</p>`;
-    }
-    
+    const special = (p.tone===13&&p.seal===16)?`<p style="margin:8px 0;font-style:italic">✨ 우주 노란 전사 — 두려움을 초월한 질문으로 진실의 문을 여는 상위 주파수.</p>`:(p.tone===12&&p.seal===3)?`<p style="margin:8px 0;font-style:italic">🌙 수정 파란 밤 — 집단 무의식의 보물을 현실로 끌어내는 협력자.</p>`:"";
     return `
       <div class="card">
-        <h3 style="margin:0 0 8px">은하 서명: KIN ${p.kin}</h3>
-        <div style="font-size:18px;font-weight:600;margin-bottom:8px">${toneName} × ${sealName}</div>
-        <div class="muted" style="margin-bottom:10px;line-height:1.6">
+        <div style="display:flex;align-items:center;gap:10px">
+          <img src="${sealImg(p.seal)}" class="large-img" alt="">
+          <div>
+            <h3 style="margin:0 0 2px">은하 서명: KIN ${p.kin}</h3>
+            <div style="font-size:18px;font-weight:600"><img src="${toneImg(p.tone)}" class="seal-img" alt=""> ${toneName} × ${SEAL_NAMES[p.seal-1]}</div>
+          </div>
+        </div>
+        <div class="muted" style="margin:8px 0 10px;line-height:1.6">
           • 톤 에너지: ${TONE_BRIEF[p.tone-1]}<br>
           • 인장 특성: ${SEAL_BRIEF[p.seal-1]}<br>
           • 웨이브스펠: ${waveName} (${p.wavePos}/13)<br>
@@ -466,11 +416,8 @@ button.primary{background:#1b2a33;border-color:#24414f}
           <p style="margin:8px 0">${intro}</p>
           ${body}
           ${special}
-          <p style="margin:12px 0 0;font-size:14px;color:#9aa0a6">
-            💫 오늘의 작은 실천: ${p.tone===13 ? "완성의 에너지로 미완성된 일 하나를 마무리해보세요" : 
-                               p.tone===1 ? "새로운 의도를 노트에 적어보세요" :
-                               p.tone===7 ? "명상이나 산책으로 내면의 소리를 들어보세요" :
-                               "오늘의 에너지와 함께 숨 쉬며 자연스럽게 흘러가세요"}
+          <p class="muted" style="margin:12px 0 0;font-size:14px">
+            💫 오늘의 작은 실천: ${p.tone===13 ? "미완 과제 1개 완결" : p.tone===1 ? "새 의도 한 줄 선언" : p.tone===7 ? "5분 명상으로 공명 맞추기" : "호흡-행동-기록의 루틴으로 리듬 잡기"}
           </p>
         </div>
       </div>`;
@@ -483,7 +430,7 @@ button.primary{background:#1b2a33;border-color:#24414f}
     const waveNames=["붉은 용","흰 바람","파란 밤","노란 씨앗","붉은 뱀","흰 세계연결자","파란 손","노란 별","붉은 달","흰 개","파란 원숭이","노란 인간","붉은 하늘여행자","흰 마법사","파란 독수리","노란 전사","붉은 지구","흰 거울","파란 폭풍","노란 태양"];
     list.innerHTML = arr.sort((a,b)=>a.name.localeCompare(b.name)).map(p=>`
       <div class="item">
-        <img src="./icon_person_info.png" width="36" height="36" alt="person"/>
+        <img src="${sealImg(p.seal)}" class="seal-img" alt="">
         <div class="meta">
           <div style="font-weight:800">${p.name||'이름 없음'}</div>
           <div class="muted" style="font-size:13px">${p.birth} · Kin ${p.kin} — ${TONE_NAMES[p.tone-1]} × ${SEAL_NAMES[p.seal-1]} · ${waveNames[p.waveIndex]} ${p.wavePos}/13</div>
@@ -526,7 +473,7 @@ button.primary{background:#1b2a33;border-color:#24414f}
     addProfile(name,birth,time); document.getElementById("mName").value=""; document.getElementById("mBirth").value=""; document.getElementById("mTime").value=""; $modal.style.display='none';
   };
 
-  // Find date modal
+  // Date search
   const $modalFind=document.getElementById("modalFind");
   document.getElementById("btnFindDate").onclick=()=>{$modalFind.style.display='flex';};
   document.getElementById("fClose").onclick=()=>{$modalFind.style.display='none';};
@@ -540,108 +487,24 @@ button.primary{background:#1b2a33;border-color:#24414f}
     setTab('cal');
   };
 
-  // 새로고침 버튼 - 오늘로 돌아가기
-  $btnRefresh.onclick=()=>{
-    isSearchMode = false;
-    $btnRefresh.style.display = 'none';
+  document.getElementById("btnRefresh").onclick=()=>{
+    isSearchMode=false;
+    document.getElementById("btnRefresh").style.display='none';
     const nowUTC=toUTC(new Date().getUTCFullYear(), new Date().getUTCMonth()+1, new Date().getUTCDate());
     render(nowUTC);
   };
 
-  // 더 따뜻한 궁합 메시지
-  function toneRelation(a,b){
-    if(a===b) return "같은 리듬을 타고 있어요. 서로의 페이스를 자연스럽게 이해합니다 💫";
-    const diff=((b-a)%13+13)%13;
-    if(diff===6||diff===7) return "완벽한 균형을 이루는 사이예요. 서로의 빈 곳을 따뜻하게 채워줍니다 ⚖️";
-    if(diff===1||diff===12) return "한 발짝 차이의 아름다움. 한 사람이 시작하면 다른 사람이 완성을 도와요 🤝";
-    return "다른 템포의 하모니. 각자의 역할이 명확할 때 시너지가 폭발해요 🎵";
-  }
-  
-  function sealRelation(a,b){
-    if(a===b) return "영혼의 쌍둥이처럼 깊은 이해와 공감이 흐릅니다 👫";
-    const colors = ["red","white","blue","yellow"];
-    const ca=colors[(a-1)%4], cb=colors[(b-1)%4];
-    if(ca===cb) return "같은 색의 에너지로 편안하고 자연스러운 유대감을 나눕니다 🎨";
-    if((ca==="red"&&cb==="white")||(ca==="white"&&cb==="red")) return "열정과 정화의 만남. 서로를 성장시키는 거울이 됩니다 🔥❄️";
-    if((ca==="blue"&&cb==="yellow")||(ca==="yellow"&&cb==="blue")) return "변화와 성숙의 조화. 함께하면 무한한 가능성이 열립니다 💙💛";
-    return "다채로운 색의 만남. 서로의 다름이 아름다운 무지개를 만듭니다 🌈";
-  }
-  
-  function compatAdvice(a,b){
-    const tips=[
-      "🌙 매달 보름달에 함께 산책하며 서로의 꿈을 나누어보세요. 달빛이 두 사람의 연결고리를 더욱 깊게 해줄 거예요.",
-      "📝 '감사 교환 일기'를 써보세요. 서로에게 고마운 점 3가지를 매주 나누면 관계가 더욱 따뜻해집니다.",
-      "🎯 13일마다 작은 프로젝트를 함께 해보세요. 요리, 그림, 정원 가꾸기... 무엇이든 좋아요!",
-      "☕ '에너지 타임'을 정해보세요. 각자가 가장 빛나는 시간을 존중하며 그 시간엔 서로를 응원해주세요.",
-      "🌱 함께 식물을 키워보세요. 매일 물을 주며 서로의 성장도 함께 돌봐주는 의미가 됩니다.",
-      "✨ 월 1회 '서프라이즈 데이'를 만들어보세요. 작은 선물이나 편지로 일상에 마법을 더해요."
-    ];
-    return tips[(a.kin+b.kin)%tips.length];
-  }
-
-  // Compatibility
-  const $modalCompat=document.getElementById("modalCompat");
-  const $selA=document.getElementById("selA");
-  const $selB=document.getElementById("selB");
-  const $compatResult=document.getElementById("compatResult");
-  document.getElementById("btnCompat").onclick=()=>{
-    populateSelects(); $modalCompat.style.display='flex';
-  };
-  document.getElementById("cClose").onclick=()=>{$modalCompat.style.display='none';};
-  $modalCompat.onclick=(e)=>{ if(e.target===$modalCompat) $modalCompat.style.display='none'; };
-
-  function populateSelects(){
-    const arr=getProfiles();
-    const opts = arr.map(p=>`<option value="${p.id}">${p.name||'(이름 없음)'} — Kin ${p.kin}</option>`).join("");
-    $selA.innerHTML=opts; $selB.innerHTML=opts;
-  }
-
-  function runCompat(){
-    const arr=getProfiles(); if(!arr.length){ alert("프로필이 없습니다."); return; }
-    const A=arr.find(p=>p.id===$selA.value*1), B=arr.find(p=>p.id===$selB.value*1);
-    if(!A||!B){ alert("두 사람을 선택하세요."); return; }
-    const tRel=toneRelation(A.tone,B.tone);
-    const sRel=sealRelation(A.seal,B.seal);
-    const advice=compatAdvice(A,B);
-    
-    // 특별한 조합 체크
-    let specialMsg = "";
-    if(A.kin===B.kin){
-      specialMsg = `<p style="margin:8px 0;color:#f0c674">⭐ 같은 KIN! 운명적인 만남입니다. 서로를 깊이 이해하는 영혼의 동반자예요.</p>`;
-    } else if(Math.abs(A.kin-B.kin)===130 || Math.abs(A.kin-B.kin)===130){
-      specialMsg = `<p style="margin:8px 0;color:#f0c674">🌟 숨겨진 조화의 파트너! 정반대처럼 보이지만 완벽한 균형을 이룹니다.</p>`;
-    }
-    
-    $compatResult.innerHTML = `
-      <div class="card" style="line-height:1.7">
-        <h3 style="margin:0 0 10px">💕 궁합 결과</h3>
-        <div class="muted" style="margin-bottom:10px;font-size:14px">
-          <b>${A.name||'A'}</b> · Kin ${A.kin} (${TONE_NAMES[A.tone-1]} × ${SEAL_NAMES[A.seal-1]})<br>
-          <b>${B.name||'B'}</b> · Kin ${B.kin} (${TONE_NAMES[B.tone-1]} × ${SEAL_NAMES[B.seal-1]})
-        </div>
-        ${specialMsg}
-        <p style="margin:10px 0"><b>리듬의 조화</b><br>${tRel}</p>
-        <p style="margin:10px 0"><b>에너지의 만남</b><br>${sRel}</p>
-        <div style="margin-top:12px;padding:12px;background:#1a1c21;border-radius:8px">
-          <div style="font-weight:600;margin-bottom:6px">💫 특별 제안</div>
-          <div style="font-size:14px;color:#cfd8e3">${advice}</div>
-        </div>
-      </div>`;
-  }
-  document.getElementById("cRun").onclick=runCompat;
-
-  // Tutorial - 탭 위치 수정
+  // Tutorial (same logic as previous version)
   const tutOverlay=document.getElementById("tutOverlay");
   const tutCard=document.getElementById("tutCard");
   const tutTitle=document.getElementById("tutTitle");
   const tutBody=document.getElementById("tutBody");
   const tutSkip=document.getElementById("tutSkip");
   const tutNext=document.getElementById("tutNext");
-
   const TUT_KEY_SEEN="tutV1Seen";
   const TUT_KEY_NEVER="tutV1Never";
   const steps=[
-    {sel:"#todayCard", title:"오늘 카드", body:"오늘의 Kin, 톤/인장, 웨이브스펠과 제안을 한눈에 봅니다."},
+    {sel:"#todayCard", title:"오늘 카드", body:"오늘의 Kin, 톤/인장(아이콘 포함), 웨이브스펠과 제안을 한눈에 봅니다."},
     {sel:"#grid", title:"28일 그리드", body:"셀은 양력, 하단은 13문 날짜입니다. '특정 날짜 검색'으로 바로 이동할 수 있어요."},
     {sel:"#tabProfiles", title:"은하 프로필", body:"본인/지인을 추가하고 해석과 두 사람 궁합을 볼 수 있습니다.", beforeShow:()=>setTab('profiles')},
     {sel:"#tabGuide", title:"가이드", body:"13Moon 기본 개념과 활용법을 간단히 정리했습니다.", beforeShow:()=>setTab('guide')}
@@ -650,73 +513,39 @@ button.primary{background:#1b2a33;border-color:#24414f}
   function clearSpot(){ if(spotlightEl){ spotlightEl.classList.remove('spotlight'); spotlightEl=null; } }
   function positionTutCard(target){
     const r=target.getBoundingClientRect();
-    const cardWidth = 360;
-    const cardHeight = 120; // 예상 높이
-    
-    // 화면 중앙에 가까운 위치 계산
+    const cardWidth = 360, cardHeight = 120;
     let x = r.left + (r.width/2) - (cardWidth/2);
     let y = r.bottom + 12;
-    
-    // 화면 밖으로 나가지 않도록 조정
     x = Math.max(12, Math.min(window.innerWidth - cardWidth - 12, x));
-    
-    // 아래 공간이 부족하면 위에 표시
-    if(y + cardHeight > window.innerHeight - 12){
-      y = r.top - cardHeight - 12;
-    }
-    
-    tutCard.style.left=x+"px"; 
-    tutCard.style.top=y+"px";
+    if(y + cardHeight > window.innerHeight - 12){ y = r.top - cardHeight - 12; }
+    tutCard.style.left=x+"px"; tutCard.style.top=y+"px";
   }
   function runStep(idx){
     clearSpot();
-    const s=steps[idx]; 
-    
-    // beforeShow 콜백 실행
+    const s=steps[idx];
     if(s.beforeShow) s.beforeShow();
-    
-    // 약간의 딜레이를 주어 탭 전환이 완료된 후 요소를 찾도록 함
     setTimeout(()=>{
       const el=document.querySelector(s.sel);
-      if(!el){ 
-        console.error("Tutorial element not found:", s.sel);
-        endTut(); 
-        return; 
-      }
-      
-      tutTitle.textContent=s.title; 
-      tutBody.textContent=s.body;
-      tutOverlay.style.display='block';
-      tutCard.style.display='block';
-      el.classList.add('spotlight'); 
-      spotlightEl=el;
-      
-      // 요소가 화면에 보이도록 스크롤
+      if(!el){ endTut(); return; }
+      tutTitle.textContent=s.title; tutBody.textContent=s.body;
+      tutOverlay.style.display='block'; tutCard.style.display='block';
+      el.classList.add('spotlight'); spotlightEl=el;
       el.scrollIntoView({behavior: 'smooth', block: 'center'});
-      
-      // 스크롤 후 위치 재계산
-      setTimeout(()=>{
-        positionTutCard(el);
-      }, 300);
+      setTimeout(()=>positionTutCard(el),300);
     }, 100);
   }
   function endTut(){
-    clearSpot(); 
-    tutOverlay.style.display='none'; 
-    tutCard.style.display='none';
-    localStorage.setItem(TUT_KEY_SEEN,"1");
-    setTab('cal'); // 캘린더 탭으로 돌아가기
+    clearSpot(); tutOverlay.style.display='none'; tutCard.style.display='none';
+    localStorage.setItem(TUT_KEY_SEEN,"1"); setTab('cal');
   }
   tutNext.onclick=()=>{ stepIdx++; if(stepIdx>=steps.length){ endTut(); } else { runStep(stepIdx);} };
   tutSkip.onclick=()=>{ localStorage.setItem(TUT_KEY_NEVER,"1"); endTut(); };
-
   function maybeStartTutorial(){
     const never=localStorage.getItem(TUT_KEY_NEVER)==="1";
     const seen=localStorage.getItem(TUT_KEY_SEEN)==="1";
     if(!never && !seen){ stepIdx=0; runStep(0); }
   }
 
-  // Init
   const nowUTC=toUTC(new Date().getUTCFullYear(), new Date().getUTCMonth()+1, new Date().getUTCDate());
   function syncBaseInputs(){ const b=getBase(); document.getElementById("baseDate").value=b.baseDate; document.getElementById("baseKin").value=String(b.baseKin); }
   document.getElementById("btnSaveBase").onclick=()=>{
