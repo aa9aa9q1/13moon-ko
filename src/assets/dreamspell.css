@@ -1,0 +1,14 @@
+:root{
+  --ds-red:#E75A4A;
+  --ds-white:#EDEFF2;
+  --ds-blue:#3D9CEA;
+  --ds-yellow:#F6C542;
+}
+.seal-red   { color: var(--ds-red); }
+.seal-white { color: var(--ds-white); }
+.seal-blue  { color: var(--ds-blue); }
+.seal-yellow{ color: var(--ds-yellow); }
+.icon-24 { width:24px; height:24px; }
+.icon-32 { width:32px; height:32px; }
+.icon-48 { width:48px; height:48px; }
+.icon-64 { width:64px; height:64px; }

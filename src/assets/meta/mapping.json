@@ -1,0 +1,212 @@
+{
+  "seals": [
+    {
+      "file": "seals/01_red-dragon.svg",
+      "label_ko": "붉은 용",
+      "class": "seal-red"
+    },
+    {
+      "file": "seals/02_white-wind.svg",
+      "label_ko": "흰 바람",
+      "class": "seal-white"
+    },
+    {
+      "file": "seals/03_blue-night.svg",
+      "label_ko": "파란 밤",
+      "class": "seal-blue"
+    },
+    {
+      "file": "seals/04_yellow-seed.svg",
+      "label_ko": "노란 씨앗",
+      "class": "seal-yellow"
+    },
+    {
+      "file": "seals/05_red-serpent.svg",
+      "label_ko": "붉은 뱀",
+      "class": "seal-red"
+    },
+    {
+      "file": "seals/06_white-worldbridger.svg",
+      "label_ko": "흰 세계연결자",
+      "class": "seal-white"
+    },
+    {
+      "file": "seals/07_blue-hand.svg",
+      "label_ko": "파란 손",
+      "class": "seal-blue"
+    },
+    {
+      "file": "seals/08_yellow-star.svg",
+      "label_ko": "노란 별",
+      "class": "seal-yellow"
+    },
+    {
+      "file": "seals/09_red-moon.svg",
+      "label_ko": "붉은 달",
+      "class": "seal-red"
+    },
+    {
+      "file": "seals/10_white-dog.svg",
+      "label_ko": "흰 개",
+      "class": "seal-white"
+    },
+    {
+      "file": "seals/11_blue-monkey.svg",
+      "label_ko": "파란 원숭이",
+      "class": "seal-blue"
+    },
+    {
+      "file": "seals/12_yellow-human.svg",
+      "label_ko": "노란 인간",
+      "class": "seal-yellow"
+    },
+    {
+      "file": "seals/13_red-skywalker.svg",
+      "label_ko": "붉은 하늘여행자",
+      "class": "seal-red"
+    },
+    {
+      "file": "seals/14_white-wizard.svg",
+      "label_ko": "흰 마법사",
+      "class": "seal-white"
+    },
+    {
+      "file": "seals/15_blue-eagle.svg",
+      "label_ko": "파란 독수리",
+      "class": "seal-blue"
+    },
+    {
+      "file": "seals/16_yellow-warrior.svg",
+      "label_ko": "노란 전사",
+      "class": "seal-yellow"
+    },
+    {
+      "file": "seals/17_red-earth.svg",
+      "label_ko": "붉은 지구",
+      "class": "seal-red"
+    },
+    {
+      "file": "seals/18_white-mirror.svg",
+      "label_ko": "흰 거울",
+      "class": "seal-white"
+    },
+    {
+      "file": "seals/19_blue-storm.svg",
+      "label_ko": "파란 폭풍",
+      "class": "seal-blue"
+    },
+    {
+      "file": "seals/20_yellow-sun.svg",
+      "label_ko": "노란 태양",
+      "class": "seal-yellow"
+    }
+  ],
+  "tones": [
+    {
+      "file": "tones/01.svg",
+      "label_ko": "1 자기"
+    },
+    {
+      "file": "tones/02.svg",
+      "label_ko": "2 달"
+    },
+    {
+      "file": "tones/03.svg",
+      "label_ko": "3 전기"
+    },
+    {
+      "file": "tones/04.svg",
+      "label_ko": "4 자기(형태)"
+    },
+    {
+      "file": "tones/05.svg",
+      "label_ko": "5 발산"
+    },
+    {
+      "file": "tones/06.svg",
+      "label_ko": "6 리듬"
+    },
+    {
+      "file": "tones/07.svg",
+      "label_ko": "7 공명"
+    },
+    {
+      "file": "tones/08.svg",
+      "label_ko": "8 은하"
+    },
+    {
+      "file": "tones/09.svg",
+      "label_ko": "9 태양"
+    },
+    {
+      "file": "tones/10.svg",
+      "label_ko": "10 행성"
+    },
+    {
+      "file": "tones/11.svg",
+      "label_ko": "11 스펙트럴"
+    },
+    {
+      "file": "tones/12.svg",
+      "label_ko": "12 수정(협력)"
+    },
+    {
+      "file": "tones/13.svg",
+      "label_ko": "13 우주"
+    }
+  ],
+  "moons": [
+    {
+      "file": "moons/01.svg",
+      "label_ko": "1 자각의 달"
+    },
+    {
+      "file": "moons/02.svg",
+      "label_ko": "2 도전의 달"
+    },
+    {
+      "file": "moons/03.svg",
+      "label_ko": "3 서비스의 달"
+    },
+    {
+      "file": "moons/04.svg",
+      "label_ko": "4 자기(형태)의 달"
+    },
+    {
+      "file": "moons/05.svg",
+      "label_ko": "5 힘의 달"
+    },
+    {
+      "file": "moons/06.svg",
+      "label_ko": "6 균형의 달"
+    },
+    {
+      "file": "moons/07.svg",
+      "label_ko": "7 공명의 달"
+    },
+    {
+      "file": "moons/08.svg",
+      "label_ko": "8 무결성의 달"
+    },
+    {
+      "file": "moons/09.svg",
+      "label_ko": "9 의도의 달"
+    },
+    {
+      "file": "moons/10.svg",
+      "label_ko": "10 현현의 달"
+    },
+    {
+      "file": "moons/11.svg",
+      "label_ko": "11 해방의 달"
+    },
+    {
+      "file": "moons/12.svg",
+      "label_ko": "12 협력의 달"
+    },
+    {
+      "file": "moons/13.svg",
+      "label_ko": "13 우주의 달"
+    }
+  ]
+}
